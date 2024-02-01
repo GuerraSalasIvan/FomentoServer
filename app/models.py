@@ -102,7 +102,7 @@ class Equipos(models.Model):
     
     deporte = models.ForeignKey(Deportes, verbose_name=("deporte"), on_delete=models.CASCADE)
     usuario_valoracion = models.ManyToManyField(Usuarios, through="Votacion", related_name="votacion_usuario")   
-    usurio = models.ManyToManyField(Usuarios, through="Rel_Usu_Equi", related_name="usuario_equipo") 
+    usuario = models.ManyToManyField(Usuarios, through="Rel_Usu_Equi", related_name="usuario_equipo") 
     liga = models.ForeignKey(Liga, verbose_name=("Liga"), on_delete=models.CASCADE)
     
     def __str__(self):

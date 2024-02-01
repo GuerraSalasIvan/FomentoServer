@@ -416,6 +416,58 @@
     }
 },
 {
+    "model": "admin.logentry",
+    "pk": 33,
+    "fields": {
+        "action_time": "2024-02-01T09:53:22.215Z",
+        "user": 1,
+        "content_type": 13,
+        "object_id": "1",
+        "object_repr": "Rel_Usu_Equi object (1)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 34,
+    "fields": {
+        "action_time": "2024-02-01T09:53:33.214Z",
+        "user": 1,
+        "content_type": 13,
+        "object_id": "2",
+        "object_repr": "Rel_Usu_Equi object (2)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 35,
+    "fields": {
+        "action_time": "2024-02-01T09:53:39.260Z",
+        "user": 1,
+        "content_type": 13,
+        "object_id": "3",
+        "object_repr": "Rel_Usu_Equi object (3)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 36,
+    "fields": {
+        "action_time": "2024-02-01T09:53:46.753Z",
+        "user": 1,
+        "content_type": 13,
+        "object_id": "4",
+        "object_repr": "Rel_Usu_Equi object (4)",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
     "model": "auth.permission",
     "pk": 1,
     "fields": {
@@ -1694,6 +1746,38 @@
         "deportes_fav": "chico",
         "hitos_publicos": "chico",
         "usuarios": 3
+    }
+},
+{
+    "model": "app.rel_usu_equi",
+    "pk": 1,
+    "fields": {
+        "usuario": 1,
+        "equipos": 1
+    }
+},
+{
+    "model": "app.rel_usu_equi",
+    "pk": 2,
+    "fields": {
+        "usuario": 2,
+        "equipos": 1
+    }
+},
+{
+    "model": "app.rel_usu_equi",
+    "pk": 3,
+    "fields": {
+        "usuario": 5,
+        "equipos": 2
+    }
+},
+{
+    "model": "app.rel_usu_equi",
+    "pk": 4,
+    "fields": {
+        "usuario": 3,
+        "equipos": 2
     }
 }
 ]
