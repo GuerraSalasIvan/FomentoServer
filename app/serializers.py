@@ -35,3 +35,15 @@ class EquipoSerializer(serializers.ModelSerializer):
         model = Equipos
         fields = ['nombre','deporte','liga','capacidad','usuario']
         
+class UbicacionSerializer(serializers.ModelSerializer):
+        
+    class Meta():
+        model = Ubicacion
+        fields = '__all__'
+        
+class Perfil_PublicoSerializer(serializers.ModelSerializer):
+        
+    class Meta():
+        model = Perfil_Publico
+        fields = '__all__'
+        
