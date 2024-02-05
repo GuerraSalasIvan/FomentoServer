@@ -63,12 +63,15 @@ class BusquedaAvanzadaUbicacionForm(forms.Form):
 class BusquedaAvanzadaPerfil_PublicoForm(forms.Form):
     
     textoBusqueda = forms.CharField(required=False)
+    '''
     lugares = Perfil_Publico.objects.all()
     lugar_fav = forms.ModelMultipleChoiceField(
         queryset=lugares,
         required=True,
         help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
     )
+    '''
+    
     
 
     def clean(self):
@@ -76,12 +79,12 @@ class BusquedaAvanzadaPerfil_PublicoForm(forms.Form):
         
         #Obtenemos los campos
         textoBusqueda = self.cleaned_data.get('textoBusqueda')
-        lugar_fav = self.cleaned_data.get('lugar_fav')
+        #lugar_fav = self.cleaned_data.get('lugar_fav')
 
         if(textoBusqueda == ""):
             self.add_error('textoBusqueda', 'no textoBusqueda')
-            
+        '''
         if(lugar_fav < 0):
             self.add_error('lugar_fav', 'no lugar_fav')
-        
+        ''' 
         return self.cleaned_data

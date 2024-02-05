@@ -79,7 +79,7 @@ def ubicacion_busqueda_avanzada(request):
                 ubicacion = ubicacion.filter(capacidad__gt=capacidad)
                 
             if(calle != None):
-                ubicacion = ubicacion.filter(calle_contains=calle)
+                ubicacion = ubicacion.filter(calle__contains=calle)
                 
             ubicacion = ubicacion.all()
             
@@ -103,15 +103,17 @@ def perfil_publico_busqueda_avanzada(request):
             
             #Obtener filtros
             textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
-            lugar_fav = formulario.cleaned_data.get('lugar_fav')
+            #lugar_fav = formulario.cleaned_data.get('lugar_fav')
             
             if(textoBusqueda != ""):
-                perfil_publico = perfil_publico.filter(Q(nombre__contains=textoBusqueda) | Q(deporte__deporte__contains=textoBusqueda))
-            
+                perfil_publico = perfil_publico.filter(descripcion__contains=textoBusqueda)
+                
+            '''
             if(len(lugar_fav) > 0):
                 filtroOR = Q(lugar_fav = lugar_fav[0])
                 for lugar_fav in lugar_fav[1:]:
                     filtroOR |= Q(lugar_fav=lugar_fav)
+            '''
                 
             perfil_publico = perfil_publico.all()
             
