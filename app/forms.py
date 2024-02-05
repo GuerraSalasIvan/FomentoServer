@@ -76,14 +76,10 @@ class BusquedaAvanzadaPerfil_PublicoForm(forms.Form):
         
         #Obtenemos los campos
         textoBusqueda = self.cleaned_data.get('textoBusqueda')
-        capacidad = self.cleaned_data.get('capacidad')
         lugar_fav = self.cleaned_data.get('lugar_fav')
 
         if(textoBusqueda == ""):
             self.add_error('textoBusqueda', 'no textoBusqueda')
-        
-        if(capacidad < 0):
-            self.add_error('capacidad', 'no capacidad')
             
         if(lugar_fav < 0):
             self.add_error('lugar_fav', 'no lugar_fav')
