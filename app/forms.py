@@ -37,7 +37,7 @@ class BusquedaAvanzadaUbicacionForm(forms.Form):
     
     textoBusqueda = forms.CharField(required=False)
     capacidad = forms.IntegerField(required=False)
-    calle = forms.CharField(requiered=False)
+    calle = forms.CharField(required=False)
 
     def clean(self):
         super().clean()
