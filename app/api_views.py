@@ -13,6 +13,27 @@ def equipo_list(request):
     serializer = EquipoSerializer(equipos, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def ubicacion_list(request):
+    ubicacion = (Ubicacion.objects.prefetch_related('equipo').prefetch_related('deporte')
+               .all())
+    serializer = UbicacionSerializer(ubicacion, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def liga_list(request):
+    liga = (Liga.objects
+               .all())
+    serializer = LigaSerializer(liga, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deporte_list(request):
+    deporte = (Deportes.objects
+               .all())
+    serializer = DeporteSerializer(deporte, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def equipo_buscar(request):

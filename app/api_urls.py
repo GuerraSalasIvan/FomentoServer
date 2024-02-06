@@ -3,6 +3,10 @@ from .api_views import *
 
 urlpatterns= [
     path('equipos',equipo_list),
+    path('ligas', liga_list),
+    path('deporte', deporte_list),
+    path('ubicacion', ubicacion_list),
+    
     path('busqueda/equipo_simple', equipo_buscar),
     path('equipos/busqueda_avanzada', equipos_busqueda_avanzada),
     
