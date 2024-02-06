@@ -13,4 +13,6 @@ urlpatterns= [
     path('ubicacion/busqueda_avanzada', ubicacion_busqueda_avanzada),
     
     path('perfil_publico/busqueda_avanzada', perfil_publico_busqueda_avanzada),
+    
+    path('equipos/crear', crear_equipo),
 ]

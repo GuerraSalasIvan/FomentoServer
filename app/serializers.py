@@ -47,3 +47,28 @@ class Perfil_PublicoSerializer(serializers.ModelSerializer):
         model = Perfil_Publico
         fields = '__all__'
         
+class EquipoSerializerCreate(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Equipos
+        fields=['nombre','deporte','liga','capacidad']
+        
+    def validate_nombre(self,nombre):
+        equipoNombre = Equipos.objects.filter(nombre=nombre).first()
+        
+        if(not equipoNombre is None):
+            if(not self.instance is None and equipoNombre.id == self.instance.id):
+                pass
+            else:
+                raise serializers.ValidationError('Ya existe un equipo con ese nombre')
+        return nombre
+    
+    def validate_capacidad(self, capacidad):
+        print(self.initial_data)
+        if(self.initial_data['deporte'] == 'BSK'):
+            pass
+        elif(self.initial_data['deporte'] == 'FUT'):
+            pass
+        elif (self.initial_data['deporte'] == 'PDL'):
+            pass
+        

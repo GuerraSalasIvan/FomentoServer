@@ -144,3 +144,16 @@ def perfil_publico_busqueda_avanzada(request):
             return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['POST'])
+def crear_equipo(request):
+    serializers = EquipoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Equipo Creado')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
