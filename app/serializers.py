@@ -64,11 +64,11 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
         return nombre
     
     def validate_capacidad(self, capacidad):
-        print(self.initial_data)
         if(self.initial_data['deporte'] == 'BSK'):
             pass
         elif(self.initial_data['deporte'] == 'FUT'):
             pass
         elif (self.initial_data['deporte'] == 'PDL'):
             pass
+        return capacidad
         
