@@ -157,3 +157,12 @@ def crear_equipo(request):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else: 
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+@api_view(['DELETE'])
+def equipo_eliminar(request,equipo_id):
+    equipo = Equipos.objects.get(id=equipo_id)
+    try:
+        equipo.delete()
+        return Response("Equipo ELIMINADO")
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -33,7 +33,7 @@ class EquipoSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Equipos
-        fields = ['nombre','deporte','liga','capacidad','usuario']
+        fields = ['id','nombre','deporte','liga','capacidad','usuario']
         
 class UbicacionSerializer(serializers.ModelSerializer):
         
