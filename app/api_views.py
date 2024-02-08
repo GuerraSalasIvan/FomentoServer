@@ -144,7 +144,13 @@ def perfil_publico_busqueda_avanzada(request):
             return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+@api_view(['GET']) 
+def obtener_equipo(request, equipo_id):
+    equipo = Equipos.objects.select_related('deporte').prefetch_related('usuario')
+    equipo = equipo.get(id=equipo_id)
+    serializer = EquipoSerializer(equipo)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def crear_equipo(request):
@@ -157,6 +163,11 @@ def crear_equipo(request):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else: 
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+    
+@api_view(['PUT'])
+def equipo_editar(request,equipo_id):
+    pass
     
 @api_view(['DELETE'])
 def equipo_eliminar(request,equipo_id):
