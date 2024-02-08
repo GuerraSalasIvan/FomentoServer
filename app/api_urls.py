@@ -8,6 +8,7 @@ urlpatterns= [
     path('ligas', liga_list),
     path('deporte', deporte_list),
     path('ubicacion', ubicacion_list),
+    path('ubicacion/<int:ubicacion_id>', obtener_ubicacion),
     
     path('busqueda/equipo_simple', equipo_buscar),
     path('equipos/busqueda_avanzada', equipos_busqueda_avanzada),
@@ -15,6 +16,7 @@ urlpatterns= [
     path('ubicacion/busqueda_avanzada', ubicacion_busqueda_avanzada),
     
     path('perfil_publico/busqueda_avanzada', perfil_publico_busqueda_avanzada),
+    path('perfil_publico/<int:perfil_publico_id>', obtener_perfil_publico),
     
     path('equipos/crear', crear_equipo),
     

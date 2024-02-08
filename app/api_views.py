@@ -177,3 +177,18 @@ def equipo_eliminar(request,equipo_id):
         return Response("Equipo ELIMINADO")
     except Exception as error:
         return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    
+@api_view(['GET']) 
+def obtener_ubicacion(request, ubicacion_id):
+    ubicacion = Ubicacion.objects.prefetch_related('deporte').prefetch_related('equipo')
+    ubicacion = ubicacion.get(id=ubicacion_id)
+    serializer = UbicacionSerializer(ubicacion)
+    return Response(serializer.data)
+
+@api_view(['GET']) 
+def obtener_perfil_publico(request, perfil_publico_id):
+    perfil_publico = Perfil_Publico.objects.select_related('lugar_fav')
+    perfil_publico = perfil_publico.get(id=perfil_publico_id)
+    serializer = Perfil_PublicoSerializer(perfil_publico)
+    return Response(serializer.data)
