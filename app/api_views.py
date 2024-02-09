@@ -7,13 +7,6 @@ from .forms import *
 from django.db.models import Q,Prefetch
 
 @api_view(['GET'])
-def equipo_list(request):
-    equipos = (Equipos.objects.select_related("deporte","liga")
-               .all())
-    serializer = EquipoSerializer(equipos, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
 def ubicacion_list(request):
     ubicacion = (Ubicacion.objects.prefetch_related('equipo').prefetch_related('deporte')
                .all())
@@ -35,6 +28,16 @@ def deporte_list(request):
     return Response(serializer.data)
 
 
+################################## EQUIPO ######################################
+
+@api_view(['GET'])
+def equipo_list(request):
+    equipos = (Equipos.objects.select_related("deporte","liga")
+               .all())
+    serializer = EquipoSerializer(equipos, many=True)
+    return Response(serializer.data)
+
+
 @api_view(['GET'])
 def equipo_buscar(request):
     
@@ -47,7 +50,7 @@ def equipo_buscar(request):
         return Response(serializer.data)
     else:
         return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 # ------------------------- Busqueda avanzada equipo ---------------------------
 @api_view(['GET'])
 def equipos_busqueda_avanzada(request):
@@ -78,6 +81,42 @@ def equipos_busqueda_avanzada(request):
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
     
     
+@api_view(['GET']) 
+def obtener_equipo(request, equipo_id):
+    equipo = Equipos.objects.select_related('deporte').prefetch_related('usuario')
+    equipo = equipo.get(id=equipo_id)
+    serializer = EquipoSerializer(equipo)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def crear_equipo(request):
+    serializers = EquipoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Equipo Creado')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+    
+@api_view(['PUT'])
+def equipo_editar(request,equipo_id):
+    pass
+    
+@api_view(['DELETE'])
+def equipo_eliminar(request,equipo_id):
+    equipo = Equipos.objects.get(id=equipo_id)
+    try:
+        equipo.delete()
+        return Response("Equipo ELIMINADO")
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+################################## UBICACION ######################################
+
+ 
 # ------------------------- Busqueda avanzada ubicacion ---------------------------
 @api_view(['GET'])
 def ubicacion_busqueda_avanzada(request):
@@ -111,6 +150,40 @@ def ubicacion_busqueda_avanzada(request):
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['GET']) 
+def obtener_ubicacion(request, ubicacion_id):
+    ubicacion = Ubicacion.objects.prefetch_related('deporte').prefetch_related('equipo')
+    ubicacion = ubicacion.get(id=ubicacion_id)
+    serializer = UbicacionSerializer(ubicacion)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def crear_ubicacion(request):
+    serializers = UbicacionSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Ubicacion Creada')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT'])
+def ubicacion_editar(request,ubicacion_id):
+    pass
+    
+@api_view(['DELETE'])
+def ubicacion_eliminar(request,ubicacion_id):
+    ubicacion = Ubicacion.objects.get(id=ubicacion_id)
+    try:
+        ubicacion.delete()
+        return Response('Ubicacion Creada')
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+############################### PERFIL PUBLICO ###################################
     
 # ------------------------- Busqueda avanzada perfil publico ---------------------------
 @api_view(['GET'])
@@ -145,46 +218,6 @@ def perfil_publico_busqueda_avanzada(request):
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET']) 
-def obtener_equipo(request, equipo_id):
-    equipo = Equipos.objects.select_related('deporte').prefetch_related('usuario')
-    equipo = equipo.get(id=equipo_id)
-    serializer = EquipoSerializer(equipo)
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def crear_equipo(request):
-    serializers = EquipoSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('Equipo Creado')
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
-    
-@api_view(['PUT'])
-def equipo_editar(request,equipo_id):
-    pass
-    
-@api_view(['DELETE'])
-def equipo_eliminar(request,equipo_id):
-    equipo = Equipos.objects.get(id=equipo_id)
-    try:
-        equipo.delete()
-        return Response("Equipo ELIMINADO")
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    
-@api_view(['GET']) 
-def obtener_ubicacion(request, ubicacion_id):
-    ubicacion = Ubicacion.objects.prefetch_related('deporte').prefetch_related('equipo')
-    ubicacion = ubicacion.get(id=ubicacion_id)
-    serializer = UbicacionSerializer(ubicacion)
-    return Response(serializer.data)
 
 @api_view(['GET']) 
 def obtener_perfil_publico(request, perfil_publico_id):
@@ -192,3 +225,29 @@ def obtener_perfil_publico(request, perfil_publico_id):
     perfil_publico = perfil_publico.get(id=perfil_publico_id)
     serializer = Perfil_PublicoSerializer(perfil_publico)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def crear_perfil_publico(request):
+    serializers = Perfil_PublicoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Perfil publico Creado')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT'])
+def perfil_publico_editar(request,perfil_publico_id):
+    pass
+    
+@api_view(['DELETE'])
+def perfil_publico_eliminar(request,perfil_publico_id):
+    perfil_publico = Perfil_Publico.objects.get(id=perfil_publico_id)
+    try:
+        perfil_publico.delete()
+        return Response('Perfil publico Creado')
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
