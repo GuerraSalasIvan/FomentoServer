@@ -15,6 +15,8 @@ urlpatterns= [
     path('ubicacion', ubicacion_list),
     path('ubicacion/<int:ubicacion_id>', obtener_ubicacion),
     path('ubicacion/busqueda_avanzada', ubicacion_busqueda_avanzada),
+    path('ubicacion/crear', crear_ubicacion),
+    path('ubicacion/eliminar/<int:ubicacion_id>',ubicacion_eliminar),
     
     #-------------------- DEPORTE -------------------
     path('deporte', deporte_list),
@@ -25,6 +27,8 @@ urlpatterns= [
     #----------------- PERFIL PUBLICO ---------------
     path('perfil_publico/busqueda_avanzada', perfil_publico_busqueda_avanzada),
     path('perfil_publico/<int:perfil_publico_id>', obtener_perfil_publico),
+    path('perfil_publico/crear', crear_perfil_publico),
+    path('perfil_publico/eliminar/<int:perfil_publico_id>',perfil_publico_eliminar),
     
     
     
