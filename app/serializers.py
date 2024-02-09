@@ -22,7 +22,7 @@ class UsuariosSerializer(serializers.ModelSerializer):
 class LigaSerializer(serializers.ModelSerializer):
     class Meta():
         model = Liga
-        fields = ['liga']
+        fields = ['id','liga']
         
 ################################## DEPORTE ######################################
 

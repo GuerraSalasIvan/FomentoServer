@@ -103,7 +103,18 @@ def crear_equipo(request):
     
 @api_view(['PUT'])
 def equipo_editar(request,equipo_id):
-    pass
+    equipo = Equipos.objects.get(id=equipo_id)
+    serializers = EquipoSerializerCreate(data=request.data, instance=equipo)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Equipo Editado')
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
     
 @api_view(['DELETE'])
 def equipo_eliminar(request,equipo_id):
