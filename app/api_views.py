@@ -182,7 +182,18 @@ def crear_ubicacion(request):
     
 @api_view(['PUT'])
 def ubicacion_editar(request,ubicacion_id):
-    pass
+    ubicacion = Ubicacion.objects.get(id=ubicacion_id)
+    serializers = UbicacionSerializerCreate(data=request.data, instance=ubicacion)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('ubicacion Editada')
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['DELETE'])
 def ubicacion_eliminar(request,ubicacion_id):
@@ -252,7 +263,18 @@ def crear_perfil_publico(request):
     
 @api_view(['PUT'])
 def perfil_publico_editar(request,perfil_publico_id):
-    pass
+    perfil_publico = Perfil_Publico.objects.get(id=perfil_publico_id)
+    serializers = Perfil_PublicoSerializerCreate(data=request.data, instance=perfil_publico)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Perfil publico Editada')
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['DELETE'])
 def perfil_publico_eliminar(request,perfil_publico_id):
