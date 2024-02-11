@@ -14,10 +14,17 @@ def ubicacion_list(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def usuarios_list(request):
-    ubicacion = (Usuarios.objects.prefetch_related('rol')
+def perfil_publico_list(request):
+    perfil_publico = (Perfil_Publico.objects.select_related('lugar_fav')
                .all())
-    serializer = UsuariosSerializer(ubicacion, many=True)
+    serializer = Perfil_PublicoSerializer(perfil_publico, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def usuarios_list(request):
+    usuarios = (Usuarios.objects.prefetch_related('rol')
+               .all())
+    serializer = UsuariosSerializer(usuarios, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])

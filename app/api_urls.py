@@ -26,6 +26,7 @@ urlpatterns= [
     path('ligas', liga_list),
     
     #----------------- PERFIL PUBLICO ---------------
+    path('perfil_publico', perfil_publico_list),
     path('perfil_publico/busqueda_avanzada', perfil_publico_busqueda_avanzada),
     path('perfil_publico/<int:perfil_publico_id>', obtener_perfil_publico),
     path('perfil_publico/crear', crear_perfil_publico),
