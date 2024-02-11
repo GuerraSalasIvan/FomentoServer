@@ -32,7 +32,8 @@ urlpatterns= [
     path('perfil_publico/editar/<int:perfil_publico_id>', perfil_publico_editar),
     path('perfil_publico/eliminar/<int:perfil_publico_id>',perfil_publico_eliminar),
     
-    
+    #-------------------- USUARIOS -------------------
+    path('usuarios',usuarios_list),
     
     
 ]

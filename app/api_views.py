@@ -14,6 +14,13 @@ def ubicacion_list(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def usuarios_list(request):
+    ubicacion = (Usuarios.objects.prefetch_related('rol')
+               .all())
+    serializer = UsuariosSerializer(ubicacion, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def liga_list(request):
     liga = (Liga.objects
                .all())
