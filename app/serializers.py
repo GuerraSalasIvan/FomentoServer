@@ -56,7 +56,10 @@ class Perfil_PublicoSerializerCreate(serializers.ModelSerializer):
                 raise serializers.ValidationError('Ya existe un equipo con ese nombre')
         return descripcion
         '''
-    
+
+'''
+NO LE VEO SENTIDO UN PATCH PARA PERFIL PUBLICO
+'''
     
         
         
@@ -96,7 +99,18 @@ class EquipoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipos
         fields = ['id','nombre','deporte','liga','capacidad','usuario']
-        
+
+class EquipoSerializerActualizarNombre(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = Equipos
+        fields = ['nombre']
+    
+    def validate_nombre(self,nombre):
+        equipoNombre = Equipos.objects.filter(nombre=nombre).first()
+        if(not equipoNombre is None and equipoNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe un equipo con ese nombre')
+        return nombre
         
 ################################## UBICACION ######################################
 
@@ -133,4 +147,14 @@ class UbicacionSerializerCreate(serializers.ModelSerializer):
                 raise serializers.ValidationError('Ya existe un ubicacion en esta calle')
         return calle
     
+class UbicacionSerializerActualizarNombre(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = Ubicacion
+        fields = ['nombre']
     
+    def validate_nombre(self,nombre):
+        ubicacionNombre = Ubicacion.objects.filter(nombre=nombre).first()
+        if(not ubicacionNombre is None and ubicacionNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe una ubicacion con ese nombre')
+        return nombre
