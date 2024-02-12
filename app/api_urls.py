@@ -8,6 +8,7 @@ urlpatterns= [
     path('busqueda/equipo_simple', equipo_buscar),
     path('equipos/busqueda_avanzada', equipos_busqueda_avanzada),
     path('equipos/editar/<int:equipo_id>', equipo_editar),
+    path('equipos/editar/nombre/<int:equipo_id>',equipo_actualizar_nombre),
     path('equipos/crear', crear_equipo),
     path('equipos/eliminar/<int:equipo_id>',equipo_eliminar),
     
@@ -17,6 +18,8 @@ urlpatterns= [
     path('ubicacion/busqueda_avanzada', ubicacion_busqueda_avanzada),
     path('ubicacion/crear', crear_ubicacion),
     path('ubicacion/editar/<int:ubicacion_id>', ubicacion_editar),
+    path('ubicacion/editar/nombre/<int:ubicacion_id>',ubicacion_actualizar_nombre),
+    
     path('ubicacion/eliminar/<int:ubicacion_id>',ubicacion_eliminar),
     
     #-------------------- DEPORTE -------------------
