@@ -6,6 +6,10 @@ from rest_framework import status
 from .forms import *
 from django.db.models import Q,Prefetch
 
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+from oauth2_provider.models import AccessToken     
+
 @api_view(['GET'])
 def ubicacion_list(request):
     ubicacion = (Ubicacion.objects.prefetch_related('equipo').prefetch_related('deporte')
@@ -326,3 +330,14 @@ def perfil_publico_eliminar(request,perfil_publico_id):
         return Response('Perfil publico Creado')
     except Exception as error:
         return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+############################### REGISTRATION ###################################
+
+
+@api_view(['GET'])
+def obtener_usuario_token(request,token):
+    ModeloToken = AccessToken.objects.get(token=token)
+    usuario = UserLogin.objects.get(id=ModeloToken.id)
+    serializer = UserLoginSerializer(usuario)
+    return Response(serializer.data)

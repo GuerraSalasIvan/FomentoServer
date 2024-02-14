@@ -39,5 +39,9 @@ urlpatterns= [
     #-------------------- USUARIOS -------------------
     path('usuarios',usuarios_list),
     
+    #-------------------- USUARIOS -------------------
+    
+    path('registrar/usuario',registrar_usuario.as_view()),
+    path('usuario/token/<str:token>',obtener_usuario_token),
     
 ]
