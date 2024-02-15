@@ -17,6 +17,20 @@ class UsuariosSerializer(serializers.ModelSerializer):
         model = Usuarios
         fields = '__all__'
 
+class UsuarioSerializerRegistro(serializers.Serializer):
+ 
+    username = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+    email = serializers.EmailField()
+    rol = serializers.IntegerField()
+    
+    def validate_username(self,username):
+        usuario = UserLogin.objects.filter(username=username).first()
+        if(not usuario is None):
+            raise serializers.ValidationError('Ya existe un usuario con ese nombre')
+        return username
+    
 #################################### LIGA ######################################
 
 class LigaSerializer(serializers.ModelSerializer):
