@@ -5,10 +5,13 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .forms import *
 from django.db.models import Q,Prefetch
+from django.contrib.auth.models import Group
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from oauth2_provider.models import AccessToken     
+ 
 
 @api_view(['GET'])
 def ubicacion_list(request):
@@ -335,9 +338,59 @@ def perfil_publico_eliminar(request,perfil_publico_id):
 ############################### REGISTRATION ###################################
 
 
+class registrar_usuario(generics.CreateAPIView):
+    
+    serializer_class = UsuarioSerializerRegistro
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        serializer = UsuarioSerializerRegistro(data=request.data)
+        if serializer.is_valid():
+            try:
+                rol = int(request.data.get('rol'))
+                user = UserLogin.objects.create_user(
+                    username = serializer.data.get("username"),
+                    email = serializer.data.get("email"),
+                    password = serializer.data.get("password1"),
+                    rol = rol,   
+                )
+                
+                if(rol == UserLogin.cliente):
+                    grupo = Group.objects.get(name='Cliente') 
+                    grupo.user_set.add(user)
+                    cliente = Usuarios.objects.create( 
+                                                      rol = user,
+                                                      edad = serializer.data.get("edad"),
+                                                      sexo = serializer.data.get("sexo"),
+                                                      )
+                    cliente.save()
+                elif(rol == UserLogin.entrenador):
+                    grupo = Group.objects.get(name='Entrenador') 
+                    grupo.user_set.add(user)
+                    entrenador = Entrenador.objects.create(
+                                                            rol = user,
+                                                            edad = serializer.data.get("edad"),
+                                                            sexo = serializer.data.get("sexo"),
+                                                          )
+                    entrenador.save()
+                usuarioSerializado = UserLoginSerializer(user)
+                return Response(usuarioSerializado.data)
+            
+            except Exception as error:
+                print(repr(error))
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+  
+
+
+from oauth2_provider.models import AccessToken    
 @api_view(['GET'])
 def obtener_usuario_token(request,token):
     ModeloToken = AccessToken.objects.get(token=token)
     usuario = UserLogin.objects.get(id=ModeloToken.id)
     serializer = UserLoginSerializer(usuario)
     return Response(serializer.data)
+'''
+'''      

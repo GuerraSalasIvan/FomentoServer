@@ -7,7 +7,7 @@ from .models import *
 class UserLoginSerializer(serializers.ModelSerializer):
     class Meta():
         model = UserLogin
-        fields = ['first_name','last_name']
+        fields = '__all__'
         
 class UsuariosSerializer(serializers.ModelSerializer):
     
@@ -172,3 +172,20 @@ class UbicacionSerializerActualizarNombre(serializers.ModelSerializer):
         if(not ubicacionNombre is None and ubicacionNombre.id != self.instance.id):
             raise serializers.ValidationError('Ya existe una ubicacion con ese nombre')
         return nombre
+
+
+class UsuarioSerializerRegistro(serializers.Serializer):
+ 
+    username = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+    email = serializers.EmailField()
+    rol = serializers.IntegerField()
+    edad = serializers.IntegerField()
+    sexo = serializers.CharField()
+    
+    def validate_username(self,username):
+        usuario = UserLogin.objects.filter(username=username).first()
+        if(not usuario is None):
+            raise serializers.ValidationError('Ya existe un usuario con ese nombre')
+        return username
