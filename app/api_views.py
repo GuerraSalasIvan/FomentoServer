@@ -111,54 +111,58 @@ def obtener_equipo(request, equipo_id):
 
 @api_view(['POST'])
 def crear_equipo(request):
-    serializers = EquipoSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('Equipo Creado')
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
+    if(request.user.has_perm("equipo.add_equipos")):
+        serializers = EquipoSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response('Equipo Creado')
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else: 
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
     
     
 @api_view(['PUT'])
 def equipo_editar(request,equipo_id):
-    equipo = Equipos.objects.get(id=equipo_id)
-    serializers = EquipoSerializerCreate(data=request.data, instance=equipo)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('Equipo Editado')
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
+    if(request.user.has_perm("equipo.change_equipos")):
+        equipo = Equipos.objects.get(id=equipo_id)
+        serializers = EquipoSerializerCreate(data=request.data, instance=equipo)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response('Equipo Editado')
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else: 
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
     
 @api_view(['PATCH'])
 def equipo_actualizar_nombre(request,equipo_id):
-    serializers = EquipoSerializerCreate(data=request.data)
-    equipo = Equipos.objects.get(id=equipo_id)
-    serializers = EquipoSerializerActualizarNombre(data=request.data,instance=equipo)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Equipo EDITADO")
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    if(request.user.has_perm("equipo.change_equipos")):
+        serializers = EquipoSerializerCreate(data=request.data)
+        equipo = Equipos.objects.get(id=equipo_id)
+        serializers = EquipoSerializerActualizarNombre(data=request.data,instance=equipo)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Equipo EDITADO")
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['DELETE'])
 def equipo_eliminar(request,equipo_id):
-    equipo = Equipos.objects.get(id=equipo_id)
-    try:
-        equipo.delete()
-        return Response("Equipo ELIMINADO")
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("equipo.delete_equipos")):
+        equipo = Equipos.objects.get(id=equipo_id)
+        try:
+            equipo.delete()
+            return Response("Equipo ELIMINADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 ################################## UBICACION ######################################
 
@@ -205,53 +209,61 @@ def obtener_ubicacion(request, ubicacion_id):
 
 @api_view(['POST'])
 def crear_ubicacion(request):
-    serializers = UbicacionSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('Ubicacion Creada')
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    if(request.user.has_perm("ubicacion.add_ubicacion")):
+    
+        serializers = UbicacionSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response('Ubicacion Creada')
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else: 
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['PUT'])
 def ubicacion_editar(request,ubicacion_id):
-    ubicacion = Ubicacion.objects.get(id=ubicacion_id)
-    serializers = UbicacionSerializerCreate(data=request.data, instance=ubicacion)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('ubicacion Editada')
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    if(request.user.has_perm("ubicacion.change_ubicacion")):
+    
+        ubicacion = Ubicacion.objects.get(id=ubicacion_id)
+        serializers = UbicacionSerializerCreate(data=request.data, instance=ubicacion)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response('ubicacion Editada')
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else: 
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['PATCH'])
 def ubicacion_actualizar_nombre(request,ubicacion_id):
-    serializers = UbicacionSerializerCreate(data=request.data)
-    ubicacion = Ubicacion.objects.get(id=ubicacion_id)
-    serializers = UbicacionSerializerActualizarNombre(data=request.data,instance=ubicacion)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Ubicacion EDITADA")
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    if(request.user.has_perm("ubicacion.change_ubicacion")):
+    
+        serializers = UbicacionSerializerCreate(data=request.data)
+        ubicacion = Ubicacion.objects.get(id=ubicacion_id)
+        serializers = UbicacionSerializerActualizarNombre(data=request.data,instance=ubicacion)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Ubicacion EDITADA")
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['DELETE'])
 def ubicacion_eliminar(request,ubicacion_id):
-    ubicacion = Ubicacion.objects.get(id=ubicacion_id)
-    try:
-        ubicacion.delete()
-        return Response('Ubicacion Creada')
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("ubicacion.delete_ubicacion")):
+    
+        ubicacion = Ubicacion.objects.get(id=ubicacion_id)
+        try:
+            ubicacion.delete()
+            return Response('Ubicacion Creada')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 ############################### PERFIL PUBLICO ###################################
@@ -300,39 +312,45 @@ def obtener_perfil_publico(request, perfil_publico_id):
 
 @api_view(['POST'])
 def crear_perfil_publico(request):
-    serializers = Perfil_PublicoSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('Perfil publico Creado')
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    if(request.user.has_perm("perfil_publico.add_perfil_publico")):
+    
+        serializers = Perfil_PublicoSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response('Perfil publico Creado')
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else: 
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['PUT'])
 def perfil_publico_editar(request,perfil_publico_id):
-    perfil_publico = Perfil_Publico.objects.get(id=perfil_publico_id)
-    serializers = Perfil_PublicoSerializerCreate(data=request.data, instance=perfil_publico)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response('Perfil publico Editada')
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else: 
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    if(request.user.has_perm("perfil_publico.change_perfil_publico")):
+    
+        perfil_publico = Perfil_Publico.objects.get(id=perfil_publico_id)
+        serializers = Perfil_PublicoSerializerCreate(data=request.data, instance=perfil_publico)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response('Perfil publico Editada')
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else: 
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['DELETE'])
 def perfil_publico_eliminar(request,perfil_publico_id):
-    perfil_publico = Perfil_Publico.objects.get(id=perfil_publico_id)
-    try:
-        perfil_publico.delete()
-        return Response('Perfil publico Creado')
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("perfil_publico.delete_perfil_publico")):
+    
+        perfil_publico = Perfil_Publico.objects.get(id=perfil_publico_id)
+        try:
+            perfil_publico.delete()
+            return Response('Perfil publico Creado')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 ############################### REGISTRATION ###################################
