@@ -104,10 +104,12 @@ def equipos_busqueda_avanzada(request):
     
 @api_view(['GET']) 
 def obtener_equipo(request, equipo_id):
-    equipo = Equipos.objects.select_related('deporte').prefetch_related('usuario')
-    equipo = equipo.get(id=equipo_id)
-    serializer = EquipoSerializer(equipo)
-    return Response(serializer.data)
+    if(request.user.has_perm("equipo.view_equipos")):
+    
+        equipo = Equipos.objects.select_related('deporte').prefetch_related('usuario')
+        equipo = equipo.get(id=equipo_id)
+        serializer = EquipoSerializer(equipo)
+        return Response(serializer.data)
 
 @api_view(['POST'])
 def crear_equipo(request):
@@ -202,10 +204,12 @@ def ubicacion_busqueda_avanzada(request):
     
 @api_view(['GET']) 
 def obtener_ubicacion(request, ubicacion_id):
-    ubicacion = Ubicacion.objects.prefetch_related('deporte').prefetch_related('equipo')
-    ubicacion = ubicacion.get(id=ubicacion_id)
-    serializer = UbicacionSerializer(ubicacion)
-    return Response(serializer.data)
+    if(request.user.has_perm("ubicacion.view_ubicacion")):
+    
+        ubicacion = Ubicacion.objects.prefetch_related('deporte').prefetch_related('equipo')
+        ubicacion = ubicacion.get(id=ubicacion_id)
+        serializer = UbicacionSerializer(ubicacion)
+        return Response(serializer.data)
 
 @api_view(['POST'])
 def crear_ubicacion(request):
@@ -304,10 +308,11 @@ def perfil_publico_busqueda_avanzada(request):
 
 @api_view(['GET']) 
 def obtener_perfil_publico(request, perfil_publico_id):
-    perfil_publico = Perfil_Publico.objects.select_related('lugar_fav')
-    perfil_publico = perfil_publico.get(id=perfil_publico_id)
-    serializer = Perfil_PublicoSerializer(perfil_publico)
-    return Response(serializer.data)
+    if(request.user.has_perm("perfil_publico.view_perfil_publico")):
+        perfil_publico = Perfil_Publico.objects.select_related('lugar_fav')
+        perfil_publico = perfil_publico.get(id=perfil_publico_id)
+        serializer = Perfil_PublicoSerializer(perfil_publico)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
