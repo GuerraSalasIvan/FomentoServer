@@ -333,6 +333,31 @@ def perfil_publico_eliminar(request,perfil_publico_id):
         return Response('Perfil publico Creado')
     except Exception as error:
         return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+################################# PARTIDOS #####################################
+
+@api_view(['GET'])
+def partido_list(request):
+    partido = (Partido.objects
+               .select_related('equipo_local')
+               .select_related('equipo_visitante')
+               .select_related('ubicacion')
+               .all())
+    serializer = PartidoSerializer(partido, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def crear_partido(request):
+    serializers = PartidoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response('Partido Creado')
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else: 
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 ############################### REGISTRATION ###################################

@@ -13,3 +13,6 @@ admin.site.register(Detalles_Ubicacion)
 admin.site.register(Liga)
 admin.site.register(Ubicacion)
 admin.site.register(Rel_Usu_Equi)
+admin.site.register(Partido)
+admin.site.register(Colores)
+

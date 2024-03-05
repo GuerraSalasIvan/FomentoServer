@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+import datetime
 
 
 ################################## USUARIOS ######################################
@@ -112,7 +113,7 @@ class EquipoSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Equipos
-        fields = ['id','nombre','deporte','liga','capacidad','usuario']
+        fields = ['id','nombre','color_eq_1','color_eq_2','deporte','liga','capacidad','usuario']
 
 class EquipoSerializerActualizarNombre(serializers.ModelSerializer):
  
@@ -189,3 +190,45 @@ class UsuarioSerializerRegistro(serializers.Serializer):
         if(not usuario is None):
             raise serializers.ValidationError('Ya existe un usuario con ese nombre')
         return username
+    
+################################# PARTIDOS #####################################
+
+class PartidoSerializer(serializers.ModelSerializer):
+    
+    equipo_local = EquipoSerializer()
+    
+    class Meta():
+        model = Partido
+        fields = ['fecha','ubicacion','equipo_local','equipo_visitante','color_local','color_visitante','puntos_local','puntos_visitante']
+        
+    
+class PartidoSerializerCreate(serializers.ModelSerializer):
+
+    class Meta():
+        model = Partido
+        fields = ['fecha','ubicacion','equipo_local','equipo_visitante','color_local','color_visitante','puntos_local','puntos_visitante']
+
+    def validate_fecha(self,fecha):
+        fecha = Partido.objects.filter(fecha=fecha).first()
+        if (fecha <= datetime.now()):
+            raise serializers.ValidationError('El partido no puede ser en una fecha anterior a hoy')
+        return fecha
+    
+    def create(self,validated_data):
+        
+        if (validated_data['equipo_local'].color_eq_1 == validated_data['equipo_visitante'].color_eq_1):
+            color_visitante = validated_data['equipo_visitante'].color_eq_2
+                       
+        partido = Partido.objects.create(
+            fecha = validated_data['fecha'],
+            ubicacion = validated_data['ubicacion'],
+            equipo_local = validated_data['equipo_local'],
+            equipo_visitante = validated_data['equipo_visitante'],
+            color_local = validated_data['color_local'], 
+            color_visitante = color_visitante,                 
+            puntos_local = 0,
+            puntos_visitante = 0,
+                        
+        )
+    
+        return partido

@@ -17,7 +17,7 @@ class UserLogin(AbstractUser):
     
     rol = models.PositiveSmallIntegerField(choices=ROLES, default=1)
     
-    # Agregar estos atributos para evitar el conflicto
+    #Agregar estos atributos para evitar el conflicto
     #groups = models.ManyToManyField('auth.Group', related_name='custom_user_groups')
     #user_permissions = models.ManyToManyField('auth.Permission', related_name='custom_user_permissions')
     
@@ -27,6 +27,7 @@ class UserLogin(AbstractUser):
 class Usuarios(models.Model):
     
     edad = models.IntegerField()
+    media = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
     GENERO = [
         ('MAS','Masculino'),
         ('FEM','Femenino'),
@@ -92,13 +93,39 @@ class Liga(models.Model):
     def __str__(self):
         return self.liga
     
+class Colores(models.Model):
+    COLORES = [
+        ('Blanco','Blanco'),
+        ('Negro','Negro'),
+        ('Amarillo','Amarillo'),
+        ('Rojo','Rojo'),
+        ('Azul','Azul'),
+        ('Rosa','Rosa'),
+        ('Morado','Morado'),
+        ('Verde','Verde'),
+        ('Gris','Gris'),
+        ('Marron','Marron'),
+        ('Gris','Gris'),
+        ('Naranja','Naranja'),
+        ('---','Sin asignar'),
+        
+    ]
+    
+    color = models.CharField(
+        max_length = 10,
+        choices= COLORES,
+        default = '---',
+    )
+    
+    def __str__(self):
+        return self.color
     
     
 class Equipos(models.Model):
     nombre = models.CharField(max_length=60)
-    capacidad = models.IntegerField(
-        default=1
-     )
+    capacidad = models.IntegerField(default=1)
+    color_eq_1 = models.ForeignKey(Colores, related_name=("color_eq_1"), on_delete=models.CASCADE)
+    color_eq_2 = models.ForeignKey(Colores, related_name=("color_eq_2"), on_delete=models.CASCADE)
     
     deporte = models.ForeignKey(Deportes, verbose_name=("deporte"), on_delete=models.CASCADE)
     usuario_valoracion = models.ManyToManyField(Usuarios, through="Votacion", related_name="votacion_usuario")   
@@ -123,6 +150,9 @@ class Ubicacion(models.Model):
     nombre = models.CharField(max_length=150)
     capacidad = models.IntegerField()
     calle = models.CharField(max_length=150)
+    
+    lat = models.FloatField(verbose_name=("latitud"))
+    lng = models.FloatField(verbose_name=("longitud")) 
     
     equipo = models.ManyToManyField(Equipos, verbose_name=("equipo"))
     deporte = models.ManyToManyField(Deportes, verbose_name=("deporte"))
@@ -174,3 +204,18 @@ class Votacion(models.Model):
     
     usuarios = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     equipos = models.ForeignKey(Equipos, on_delete=models.CASCADE)
+    
+class Partido(models.Model):
+    fecha = models.DateTimeField()
+    ubicacion = models.ForeignKey(Ubicacion, verbose_name=("ubicacion"), on_delete=models.CASCADE)
+    equipo_local = models.ForeignKey(Equipos, related_name=("equipo_local"), on_delete=models.CASCADE)
+    equipo_visitante = models.ForeignKey(Equipos, related_name=("equipo_visitiante"), on_delete=models.CASCADE)
+    color_local = models.ForeignKey(Colores, related_name=("color_local"), on_delete=models.CASCADE)
+    color_visitante = models.ForeignKey(Colores, related_name=("color_visitante"), on_delete=models.CASCADE)
+    puntos_local = models.IntegerField(default=0)
+    puntos_visitante = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return str(self.equipo_local)+' vs '+str(self.equipo_visitante) + str(self.fecha.strftime("%Y-%m"))
+    
+    

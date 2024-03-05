@@ -39,6 +39,10 @@ urlpatterns= [
     #-------------------- USUARIOS -------------------
     path('usuarios',usuarios_list),
     
+    #-------------------- PARTIDOS -------------------
+    path('partidos',partido_list),
+    path('partido/crear',crear_partido),
+       
     #-------------------- USUARIOS -------------------
     
     path('registrar/usuario',registrar_usuario.as_view()),
