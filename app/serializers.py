@@ -84,7 +84,7 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
     
     class Meta:
         model = Equipos
-        fields=['nombre','deporte','liga','capacidad']
+        fields=['nombre','deporte','media_equipo','color_eq_1','color_eq_2','liga','capacidad','usuario']
         
     def validate_nombre(self,nombre):
         equipoNombre = Equipos.objects.filter(nombre=nombre).first()
@@ -96,14 +96,30 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
                 raise serializers.ValidationError('Ya existe un equipo con ese nombre')
         return nombre
     
-    def validate_capacidad(self, capacidad):
-        if(self.initial_data['deporte'] == 'BSK'):
+    def validate_capacidad(self,capacidad):
+        if (not (capacidad<= self.initial_data['usuario'])):
             pass
-        elif(self.initial_data['deporte'] == 'FUT'):
-            pass
-        elif (self.initial_data['deporte'] == 'PDL'):
-            pass
+        else:
+            raise serializers.ValidationError('No puede haber mas de'+ capacidad 
+                                              +'miembros en este equipo')
         return capacidad
+    
+    def create(self, validated_data):
+        n_miebros = len(validated_data['usuario'])
+        puntos_totales = [sum(x) for x  in validated_data['usuarios'].media]
+        media_equip = puntos_totales/n_miebros
+        
+        equipo = Equipos.objects.create(
+            nombre = validated_data['nombre'],
+            media_equipo = media_equip,
+            color_eq_1 = validated_data['color_eq_1'],
+            color_eq_2 = validated_data['color_eq_2'],
+            liga = validated_data['liga'],
+            deporte = validated_data['deporte'],
+            capacidad = validated_data['capacidad'],     
+        )
+        return equipo
+       
 
 class EquipoSerializer(serializers.ModelSerializer):
     
@@ -113,7 +129,7 @@ class EquipoSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Equipos
-        fields = ['id','nombre','color_eq_1','color_eq_2','deporte','liga','capacidad','usuario']
+        fields = ['id','nombre','media_equipo','color_eq_1','color_eq_2','deporte','liga','capacidad','usuario']
 
 class EquipoSerializerActualizarNombre(serializers.ModelSerializer):
  
@@ -227,8 +243,6 @@ class PartidoSerializerCreate(serializers.ModelSerializer):
             color_local = validated_data['color_local'], 
             color_visitante = color_visitante,                 
             puntos_local = 0,
-            puntos_visitante = 0,
-                        
+            puntos_visitante = 0,          
         )
-    
         return partido

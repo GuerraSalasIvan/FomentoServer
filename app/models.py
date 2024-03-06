@@ -126,6 +126,7 @@ class Equipos(models.Model):
     capacidad = models.IntegerField(default=1)
     color_eq_1 = models.ForeignKey(Colores, related_name=("color_eq_1"), on_delete=models.CASCADE)
     color_eq_2 = models.ForeignKey(Colores, related_name=("color_eq_2"), on_delete=models.CASCADE)
+    media_equipo = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
     
     deporte = models.ForeignKey(Deportes, verbose_name=("deporte"), on_delete=models.CASCADE)
     usuario_valoracion = models.ManyToManyField(Usuarios, through="Votacion", related_name="votacion_usuario")   
