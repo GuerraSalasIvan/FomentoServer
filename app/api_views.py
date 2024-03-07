@@ -20,6 +20,7 @@ def ubicacion_list(request):
     serializer = UbicacionSerializer(ubicacion, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def perfil_publico_list(request):
     perfil_publico = (Perfil_Publico.objects.select_related('lugar_fav')
@@ -39,6 +40,13 @@ def liga_list(request):
     liga = (Liga.objects
                .all())
     serializer = LigaSerializer(liga, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def colores_list(request):
+    color = (Colores.objects
+               .all())
+    serializer = ColorSerializer(color, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -411,7 +419,8 @@ class registrar_usuario(generics.CreateAPIView):
                 )
                 
                 if(rol == UserLogin.cliente):
-                    grupo = Group.objects.get(name='Cliente') 
+                    print(Group.objects.all())
+                    grupo = Group.objects.get(name='cliente') 
                     grupo.user_set.add(user)
                     cliente = Usuarios.objects.create( 
                                                       rol = user,
@@ -420,7 +429,7 @@ class registrar_usuario(generics.CreateAPIView):
                                                       )
                     cliente.save()
                 elif(rol == UserLogin.entrenador):
-                    grupo = Group.objects.get(name='Entrenador') 
+                    grupo = Group.objects.get(name='entrenador') 
                     grupo.user_set.add(user)
                     entrenador = Entrenador.objects.create(
                                                             rol = user,

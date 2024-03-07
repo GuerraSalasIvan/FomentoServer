@@ -28,6 +28,9 @@ urlpatterns= [
     #--------------------- LIGA ---------------------
     path('ligas', liga_list),
     
+    #-------------------- COLOR ---------------------
+    path('color', colores_list),
+    
     #----------------- PERFIL PUBLICO ---------------
     path('perfil_publico', perfil_publico_list),
     path('perfil_publico/busqueda_avanzada', perfil_publico_busqueda_avanzada),

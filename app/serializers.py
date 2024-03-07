@@ -39,6 +39,13 @@ class LigaSerializer(serializers.ModelSerializer):
         model = Liga
         fields = ['id','liga']
         
+################################### COLOR ######################################
+
+class ColorSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Colores
+        fields = ['id','color']
+
 ################################## DEPORTE ######################################
 
 class DeporteSerializer(serializers.ModelSerializer):
@@ -84,7 +91,7 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
     
     class Meta:
         model = Equipos
-        fields=['nombre','deporte','media_equipo','color_eq_1','color_eq_2','liga','capacidad','usuario']
+        fields=['nombre','deporte','media_equipo','color_eq_1','color_eq_2','liga','capacidad','usuarios']
         
     def validate_nombre(self,nombre):
         equipoNombre = Equipos.objects.filter(nombre=nombre).first()
@@ -97,7 +104,7 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
         return nombre
     
     def validate_capacidad(self,capacidad):
-        if (not (capacidad<= self.initial_data['usuario'])):
+        if (not (capacidad <= len(self.initial_data['usuarios']))):
             pass
         else:
             raise serializers.ValidationError('No puede haber mas de'+ capacidad 
@@ -105,8 +112,11 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
         return capacidad
     
     def create(self, validated_data):
-        n_miebros = len(validated_data['usuario'])
+        n_miebros = len(validated_data['usuarios'])
         puntos_totales = [sum(x) for x  in validated_data['usuarios'].media]
+        print(n_miebros)
+        print(puntos_totales)
+        
         media_equip = puntos_totales/n_miebros
         
         equipo = Equipos.objects.create(
