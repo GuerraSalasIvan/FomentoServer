@@ -407,6 +407,7 @@ class registrar_usuario(generics.CreateAPIView):
     permission_classes = [AllowAny]
     
     def create(self, request, *args, **kwargs):
+        print(request.body)
         serializer = UsuarioSerializerRegistro(data=request.data)
         if serializer.is_valid():
             try:
