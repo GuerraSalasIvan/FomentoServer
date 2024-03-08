@@ -91,7 +91,7 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
     
     class Meta:
         model = Equipos
-        fields=['nombre','deporte','media_equipo','color_eq_1','color_eq_2','liga','capacidad','usuarios']
+        fields=['nombre','deporte','media_equipo','color_eq_1','color_eq_2','liga','capacidad','usuario']
         
     def validate_nombre(self,nombre):
         equipoNombre = Equipos.objects.filter(nombre=nombre).first()
@@ -104,7 +104,7 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
         return nombre
     
     def validate_capacidad(self,capacidad):
-        if (not (capacidad <= len(self.initial_data['usuarios']))):
+        if (not (capacidad <= len(self.initial_data['usuario']))):
             pass
         else:
             raise serializers.ValidationError('No puede haber mas de'+ capacidad 
@@ -112,8 +112,13 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
         return capacidad
     
     def create(self, validated_data):
-        n_miebros = len(validated_data['usuarios'])
-        puntos_totales = [sum(x) for x  in validated_data['usuarios'].media]
+        n_miebros = len(self.initial_data['usuario'])
+        lista_usu = []
+        for usuario in self.initial_data['usuario']:
+            modeloUsuario = Usuarios.objects.get(id=usuario)
+            lista_usu.append(modeloUsuario.media)
+            
+        puntos_totales = sum(lista_usu)
         print(n_miebros)
         print(puntos_totales)
         
@@ -128,6 +133,11 @@ class EquipoSerializerCreate(serializers.ModelSerializer):
             deporte = validated_data['deporte'],
             capacidad = validated_data['capacidad'],     
         )
+        
+        for usuario in self.initial_data['usuario']:
+            modeloUsuario = Usuarios.objects.get(id=usuario)
+            Rel_Usu_Equi.objects.create(usuario=modeloUsuario, equipos=equipo)
+        
         return equipo
        
 
