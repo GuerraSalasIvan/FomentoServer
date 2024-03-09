@@ -208,11 +208,13 @@ class Votacion(models.Model):
     
 class Partido(models.Model):
     fecha = models.DateTimeField()
+    
     ubicacion = models.ForeignKey(Ubicacion, verbose_name=("ubicacion"), on_delete=models.CASCADE)
     equipo_local = models.ForeignKey(Equipos, related_name=("equipo_local"), on_delete=models.CASCADE)
     equipo_visitante = models.ForeignKey(Equipos, related_name=("equipo_visitiante"), on_delete=models.CASCADE)
     color_local = models.ForeignKey(Colores, related_name=("color_local"), on_delete=models.CASCADE)
     color_visitante = models.ForeignKey(Colores, related_name=("color_visitante"), on_delete=models.CASCADE)
+    
     puntos_local = models.IntegerField(default=0)
     puntos_visitante = models.IntegerField(default=0)
     

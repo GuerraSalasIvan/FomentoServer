@@ -380,6 +380,8 @@ def partido_list(request):
                .select_related('equipo_local')
                .select_related('equipo_visitante')
                .select_related('ubicacion')
+               .select_related('color_eq_1')
+               .select_related('color_eq_2')
                .all())
     serializer = PartidoSerializer(partido, many=True)
     return Response(serializer.data)

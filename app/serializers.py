@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-import datetime
+from datetime import datetime
 
 
 ################################## USUARIOS ######################################
@@ -240,29 +240,35 @@ class PartidoSerializer(serializers.ModelSerializer):
     
 class PartidoSerializerCreate(serializers.ModelSerializer):
 
-    class Meta():
+    class Meta:
         model = Partido
-        fields = ['fecha','ubicacion','equipo_local','equipo_visitante','color_local','color_visitante','puntos_local','puntos_visitante']
+        fields = ['fecha', 'ubicacion', 'equipo_local', 'equipo_visitante', 'color_local', 'color_visitante', 'puntos_local', 'puntos_visitante']
 
-    def validate_fecha(self,fecha):
-        fecha = Partido.objects.filter(fecha=fecha).first()
-        if (fecha <= datetime.now()):
+    def validate_fecha(self, fecha):
+        if Partido.objects.filter(fecha=fecha).exists():
+            raise serializers.ValidationError('Ya hay un partido en esa fecha y hora')
+        elif fecha < timezone.now():
             raise serializers.ValidationError('El partido no puede ser en una fecha anterior a hoy')
         return fecha
     
-    def create(self,validated_data):
-        
-        if (validated_data['equipo_local'].color_eq_1 == validated_data['equipo_visitante'].color_eq_1):
-            color_visitante = validated_data['equipo_visitante'].color_eq_2
-                       
+    def create(self, validated_data):
+        equipo_local = validated_data['equipo_local']
+        equipo_visitante = validated_data['equipo_visitante']
+
+        if equipo_local.color_eq_1 == equipo_visitante.color_eq_1:
+            color_visitante = equipo_visitante.color_eq_2
+        else:
+            color_visitante = equipo_visitante.color_eq_1
+
         partido = Partido.objects.create(
-            fecha = validated_data['fecha'],
-            ubicacion = validated_data['ubicacion'],
-            equipo_local = validated_data['equipo_local'],
-            equipo_visitante = validated_data['equipo_visitante'],
-            color_local = validated_data['color_local'], 
-            color_visitante = color_visitante,                 
-            puntos_local = 0,
-            puntos_visitante = 0,          
+            fecha=validated_data['fecha'],
+            ubicacion=validated_data['ubicacion'],
+            equipo_local=equipo_local,
+            equipo_visitante=equipo_visitante,
+            color_local=equipo_local.color_eq_1,  # Otra opción es color_local=equipo_local.color_eq_2
+            color_visitante=color_visitante,
+            puntos_local=0,
+            puntos_visitante=0,
         )
+
         return partido
